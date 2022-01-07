@@ -12,6 +12,7 @@ import time
 
 LabelBase.register(DEFAULT_FONT, './font/simhei.ttf')
 
+
 class Math(BoxLayout):
     display_label = ObjectProperty(None)
     total_label = ObjectProperty(None)
@@ -24,7 +25,7 @@ class Math(BoxLayout):
         self.total_count = str(len(self.mathlist))
         self.total_wrong_count = '0'
         self.next_equa(1)
-        self.tic_start=time.time()
+        self.tic_start = time.time()
 
     def tran_color(self, text, code):
         if(code == 'pink'):
@@ -33,13 +34,27 @@ class Math(BoxLayout):
             return '[color=#28FF28]'+text+'[/color]'
         if(code == 'red'):
             return '[color=#FF0000]'+text+'[/color]'
+        if(code == 'aqua'):
+            return '[color=#00FFFF]'+text+'[/color]'
         return text
 
     def next_equa(self, dt):
         if(len(self.mathlist) > 0):
             math_equation = self.mathlist.pop()
+            total_count_str = str(
+                len(self.mathlist))+'/'+self.total_count
+            wrong_count_str = str(
+                len(self.wrong_list))+'/'+self.total_wrong_count
+            self.total_label.text = self.tran_color(total_count_str, 'aqua')
+            self.wrong_label.text = self.tran_color(wrong_count_str, '')
         elif(len(self.wrong_list) > 0):
             math_equation = self.wrong_list.pop()
+            total_count_str = str(
+                len(self.mathlist))+'/'+self.total_count
+            wrong_count_str = str(
+                len(self.wrong_list))+'/'+self.total_wrong_count
+            self.total_label.text = self.tran_color(total_count_str, '')
+            self.wrong_label.text = self.tran_color(wrong_count_str, 'aqua')
         else:
             tic_end = time.time()
             during_time = tic_end-self.tic_start
@@ -52,9 +67,6 @@ class Math(BoxLayout):
         self.result_part = math_equation[math_equation.index("=")+1:]
         self.display_label.text = self.tran_color(
             self.display_part, 'pink')
-        self.total_label.text = str(len(self.mathlist))+'/'+self.total_count
-        self.wrong_label.text = str(
-            len(self.wrong_list))+'/'+self.total_wrong_count
 
     def do_calc(self, result):
         if(result == self.result_part):
@@ -69,7 +81,7 @@ class Math(BoxLayout):
 
     def gen_mathlist(self):
         self.mathlist = []
-        for i in range(1, 2):
+        for i in range(1, 10):
             for j in range(0, i+1):
                 math = str(i)+'-'+str(j)+'='+str(i-j)
                 self.mathlist.append(math)
