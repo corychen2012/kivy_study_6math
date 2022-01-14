@@ -39,6 +39,7 @@ class Math(BoxLayout):
         return text
 
     def next_equa(self, dt):
+        self.input_result = ''
         if(len(self.mathlist) > 0):
             math_equation = self.mathlist.pop()
             total_count_str = str(
@@ -68,8 +69,14 @@ class Math(BoxLayout):
         self.display_label.text = self.tran_color(
             self.display_part, 'pink')
 
-    def do_calc(self, result):
-        if(result == self.result_part):
+    def do_input(self, input_num):
+        self.display_part = self.display_part+str(input_num)
+        self.input_result = self.input_result+str(input_num)
+        self.display_label.text = self.tran_color(
+            self.display_part, 'pink')
+
+    def do_calc(self):
+        if(self.input_result == self.result_part):
             self.display_label.text = self.tran_color(
                 self.math_equation, 'green')
         else:
@@ -80,22 +87,21 @@ class Math(BoxLayout):
         Clock.schedule_once(self.next_equa, 1)
 
     def gen_mathlist(self):
-        self.mathlist = []
+        mathlist = []
         for i in range(1, 10):
-            for j in range(0, i+1):
-                math = str(i)+'-'+str(j)+'='+str(i-j)
-                self.mathlist.append(math)
-            for j in range(0, i+1):
-                math = str(i-j)+'+'+str(j)+'='+str(i)
-                self.mathlist.append(math)
-        random.shuffle(self.mathlist)
-        return self.mathlist
+            for j in range(10-i, 10):
+                math = str(i)+'+'+str(j)+'='+str(i+j)
+                mathlist.append(math)
+                math = str(i+j)+'-'+str(j)+'='+str(i)
+                mathlist.append(math)
+        random.shuffle(mathlist)
+        return mathlist
 
 
-class MathApp(App):
+class Math2App(App):
     def build(self):
         return Math()
 
 
 if __name__ == "__main__":
-    MathApp().run()
+    Math2App().run()
